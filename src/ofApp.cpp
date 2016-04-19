@@ -20,7 +20,8 @@ void ofApp::setup()
     }
     
     
-     for (Json::ArrayIndex i = 0; i < result.size() - 1; i += 1){
+    // buffering all the json date in to vectors
+    for (Json::ArrayIndex i = 0; i < result.size() - 1; i += 1){
          
          ofVec2f diff = ofVec2f(result[i]["coordinates"][0].asFloat(),result[i]["coordinates"][1].asFloat()) - ofVec2f(result[i+1]["coordinates"][0].asFloat(),result[i+1]["coordinates"][1].asFloat());
          float diffLength = diff.length();
@@ -35,8 +36,9 @@ void ofApp::setup()
          
      }
 
-
+    // initializaing
     loading=false;
+    loaded = false;
     ofRegisterURLNotification(this);
     averageColor = ofColor(0,0,0);
 
@@ -62,8 +64,10 @@ void ofApp::update(){
     float sumOfPoints;
     
     
-    if(img.isAllocated()){
-
+    // calculating color when new image is loaded
+    
+    if(img.isAllocated() && loaded){
+        loaded = false;
         
         for (int y = 0; y< img.getHeight()/2; y++) {
             for (int x = 0; x < img.getWidth(); x++) {
@@ -146,6 +150,8 @@ void ofApp::draw()
     
     ofSetColor(255, 255, 255);
     
+    // color average with img and color
+    
     if(img.isAllocated()){
         ofSetColor(0, 0, 0);
         ofDrawBitmapString("average sky color at the moment", 20, ofGetHeight() - 120);
@@ -187,8 +193,10 @@ void ofApp::keyPressed  (int key){
             break;
         case ' ':
             img.clear();
+            // photo credit from http://www.sheratontribecaview.com/
             ofLoadURLAsync("http://cam.sheratontribecaview.com/sheraton-tribeca-new-york-hotel.jpg","tsingy_forest");
             loading =true;
+            loaded = true;
             break;
             
     }
