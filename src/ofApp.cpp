@@ -36,12 +36,56 @@ void ofApp::setup()
      }
 
 
+    loading=false;
+    ofRegisterURLNotification(this);
+    averageColor = ofColor(0,0,0);
 
 
 }
 
 //--------------------------------------------------------------
+void ofApp::urlResponse(ofHttpResponse & response){
+    if(response.status==200 && response.request.name == "tsingy_forest"){
+        img.load(response.data);
+        loading=false;
+    }else{
+        cout << response.status << " " << response.error << endl;
+        if(response.status!=-1) loading=false;
+    }
+}
+
+//--------------------------------------------------------------
 void ofApp::update(){
+    float addUpR;
+    float addUpG;
+    float addUpB;
+    float sumOfPoints;
+    
+    
+    if(img.isAllocated()){
+
+        
+        for (int y = 0; y< img.getHeight()/2; y++) {
+            for (int x = 0; x < img.getWidth(); x++) {
+                addUpR += img.getColor(x, y).r;
+                addUpG += img.getColor(x, y).g;
+                addUpB += img.getColor(x, y).b;
+                
+                sumOfPoints += 1;
+            }
+        }
+        averageColor.set(addUpR/sumOfPoints, addUpG/sumOfPoints, addUpB/sumOfPoints);
+        cout<<averageColor<<endl;
+    
+    }
+    
+    
+    
+    
+    
+    
+    
+    
 
 }
 
@@ -50,47 +94,7 @@ void ofApp::draw()
 {
     ofBackground(255);
     ofSetColor(0, 0, 0);
-    
-    
-    
-    
 
-    
-    
-    
-    // draw directly from json
-    /*
-    for (Json::ArrayIndex i = 0; i < result.size() - 1; i += 2){
-        std::string height  = ofToString(result[i]["height"]);
-        std::string coordinateX  = ofToString(result[i]["coordinates"][0]);
-        std::string coordinateY  = ofToString(result[i]["coordinates"][1]);
-        float heightNum = ofToFloat(height);
-        ofVec2f coordVec= ofVec2f((ofToFloat(coordinateX) + 75)* 100, ((ofToFloat(coordinateY))-39)* 100);
-        coordVec.set(coordVec.x - 97, coordVec.y - 170);
-        coordVec.set(coordVec.x * 100, coordVec.y * 100);
-        
-        //float xDiff = abs(ofToFloat(ofToString(result[i]["coordinates"][0])) - ofToFloat(ofToString(result[i + 1]["coordinates"][0])));
-        //cout<<xDiff<<endl;
-        
-        ofVec2f mousePos = ofVec2f(ofGetMouseX(), ofGetMouseY());
-        ofVec2f diff = coordVec - mousePos;
-        
-        //cout<<diff<<endl;
-        if (diff.length() < 4)
-        nearest.push_back(heightNum * 2);
-        if (nearest.size() > 4){
-            nearest.pop_front();
-        }
-        
-        
-        if (heightNum > 15.0){
-            
-            ofDrawRectangle(coordVec.x + offset_x, coordVec.y + offset_y, 2, heightNum * 0.1);
-        }
-    }
-    
-     */
-    
     
     for (int i = 0; i < heights.size() ; i ++){
         
@@ -142,9 +146,28 @@ void ofApp::draw()
     
     ofSetColor(255, 255, 255);
     
+    if(img.isAllocated()){
+        ofSetColor(0, 0, 0);
+        ofDrawBitmapString("average sky color at the moment", 20, ofGetHeight() - 120);
+        ofDrawBitmapString("#" + ofToString(averageColor.getHex()) , 20, ofGetHeight() - 140);
+        
+       
+        ofSetColor(averageColor);
+        ofDrawRectangle(20, ofGetHeight() - 100, 200, 50);
+        ofSetColor(255);
+        
+        
+        img.draw(20, ofGetWidth()/2, 150, 100);
+    }
+    
     
 
 
+}
+
+//--------------------------------------------------------------
+void ofApp::exit() {
+    ofUnregisterURLNotification(this);
 }
 
 //--------------------------------------------------------------
@@ -162,6 +185,12 @@ void ofApp::keyPressed  (int key){
         case OF_KEY_RIGHT:
             offset_x -= 5.0;
             break;
+        case ' ':
+            img.clear();
+            ofLoadURLAsync("http://cam.sheratontribecaview.com/sheraton-tribeca-new-york-hotel.jpg","tsingy_forest");
+            loading =true;
+            break;
+            
     }
 }
 
