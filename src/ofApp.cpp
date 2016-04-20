@@ -5,7 +5,8 @@ void ofApp::setup()
 {
     std::string file = "nycbuidling.json";
 
-    // Now parse the JSON
+    // Now parse the JSON - data source - Mapzen
+    // Special thanks -> Weili 
     bool parsingSuccessful = result.open(file);
 
     if (parsingSuccessful)
