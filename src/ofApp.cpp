@@ -6,7 +6,7 @@ void ofApp::setup()
     std::string file = "nycbuidling.json";
 
     // Now parse the JSON - data source - Mapzen
-    // Special thanks -> Weili 
+    // Special thanks -> Weili
     bool parsingSuccessful = result.open(file);
 
     if (parsingSuccessful)
@@ -97,6 +97,7 @@ void ofApp::update(){
 //--------------------------------------------------------------
 void ofApp::draw()
 {
+    
     ofBackground(255);
     ofSetColor(0, 0, 0);
 
@@ -145,6 +146,10 @@ void ofApp::draw()
 //    ofTranslate(-ofGetWidth()/3, -ofGetWidth()/3);
 //    ofPopMatrix();
     
+    
+    
+    
+    
     float nearAverage = 0;
     for (int i = 0 ; i < nearest.size(); i ++){
         ofDrawRectangle(10 + 25 * i, 80, 20, nearest[i]);
@@ -163,17 +168,132 @@ void ofApp::draw()
     if(img.isAllocated()){
         ofSetColor(0, 0, 0);
         
+        // writing some stuff
+        ofDrawBitmapString("average sky color at the moment", 20, ofGetHeight() - 240);
+        ofDrawBitmapString("#" + ofToString(averageColor.getHex()) , 20, ofGetHeight() - 230);
         
-        ofDrawBitmapString("average sky color at the moment", 20, ofGetHeight() - 120);
-        ofDrawBitmapString("#" + ofToString(averageColor.getHex()) , 20, ofGetHeight() - 140);
+        // getting relative coordinates
+        ofVec2f popupOrigin = ofVec2f(20, ofGetHeight() - 220);
+        ofVec2f popupMaxCoor = popupOrigin + ofVec2f(300, 200);
         
-       
+        
+        // drawing the background
         ofSetColor(averageColor);
-        ofDrawRectangle(20, ofGetHeight() - 100, 200, 50);
+        ofDrawRectangle(popupOrigin, 300, 200);
         ofSetColor(255);
         
+        if (nearest.size() != 0){
+            
+            
+            // setup bg
+            ofRectangle bgRect = ofRectangle(popupOrigin, 300, 200);
+            
+            //**** firstRect -----------------------------
+            
+            ofRectangle rectA = ofRectangle(popupOrigin + ofVec2f(nearest[0] * 1.5, nearest[0]* 0.5) * 0.1, 100, 100);
+            ofRectangle rectAO = ofRectangle(popupOrigin, 80, 80);
+            
+            float offset = ofVec2f(rectA.getMaxX() - popupOrigin.x, rectA.getMaxY() - popupOrigin.y).length();
+            offset = ofMap(offset, 0, 250, 120, 60);
+            
+            rectA.setSize(offset , offset);
+            ofSetColor(0, 0, 0);
+            ofDrawRectangle(rectA);
+           
+           // ofDrawRectangle(rectAO);
+            
+            
+            ofBeginShape();
+            ofVertex(popupOrigin.x, popupOrigin.y);
+            ofVertex(rectAO.getMaxX(), popupOrigin.y);
+            ofVertex(rectA.getMaxX(), rectA.getMinY());
+            ofVertex(rectA.getMinX(), rectA.getMaxY());
+            ofVertex(popupOrigin.x, rectAO.getMaxY());
+           
+            ofEndShape();
+            
+            //*** secondRect -----------------------------
+            
+            ofRectangle rectB = ofRectangle(ofVec2f(popupMaxCoor.x - 100, popupOrigin.y) + ofVec2f(-nearest[1] * 1.5, nearest[1]* 0.5) * 0.1, 100, 100);
+            ofRectangle rectBO = ofRectangle(bgRect.getTopRight() - ofVec2f(80, 0), 80, 80);
+            float offsetB = ofVec2f(bgRect.getTopRight() - rectB.getBottomLeft()).length();
+            offsetB = ofMap(offsetB, 0, 250, 120, 60);
+            rectB.setSize(offsetB, offsetB);
+            
+            rectB.setX(rectB.x - (offsetB - 100));
+            
+            ofDrawRectangle(rectB);
+            ofDrawRectangle(rectBO);
+            ofBeginShape();
+            ofVertex(bgRect.getTopRight().x, bgRect.getTopRight().y);
+            ofVertex(rectBO.getTopLeft().x, rectBO.getTopLeft().y);
+            ofVertex(rectB.getTopLeft().x, rectB.getTopLeft().y);
+            ofVertex(rectB.getBottomRight().x, rectB.getBottomRight().y);
+            ofVertex(rectBO.getBottomRight().x, rectBO.getBottomRight().y);
+            ofEndShape();
+            
+            
+            //*** thirdRect -----------------------------
+            ofRectangle rectC = ofRectangle(ofVec2f(popupOrigin.x, popupMaxCoor.y - 100) + ofVec2f(nearest[2] * 1.5, -nearest[2]* 0.5) * 0.1, 100, 100);
+            ofRectangle rectCO = ofRectangle(bgRect.getBottomLeft() - ofVec2f(0, 80), 80, 80);
+            
+            
+            float offsetC = ofVec2f(bgRect.getBottomLeft() - rectC.getTopRight()).length();
+            offsetC = ofMap(offsetC, 0, 250, 120, 60);
+ 
+            rectC.setSize(offsetC, offsetC);
+            rectC.setY(rectC.y + (100 - offsetC));
+            
+            
+            ofDrawRectangle(rectC);
+            ofDrawRectangle(rectCO);
+            
+            ofBeginShape();
+            ofVertex(bgRect.getBottomLeft().x, bgRect.getBottomLeft().y);
+            ofVertex(rectCO.getTopLeft().x, rectCO.getTopLeft().y);
+            ofVertex(rectC.getTopLeft().x, rectC.getTopLeft().y);
+            ofVertex(rectC.getBottomRight().x, rectC.getBottomRight().y);
+            ofVertex(rectCO.getBottomRight().x, rectCO.getBottomRight().y);
+            ofEndShape();
+            
+            
+            
+            
+            //*** fourthRect -----------------------------
+            ofRectangle rectD = ofRectangle(ofVec2f(popupMaxCoor.x - 100, popupMaxCoor.y - 100) - ofVec2f(nearest[3] * 1.5, nearest[3]* 0.5) * 0.1, 100, 100);
+            ofRectangle rectDO = ofRectangle(bgRect.getBottomRight() - ofVec2f(80, 80), 80, 80);
+
+            float offsetD = ofVec2f(rectD.getTopLeft() - bgRect.getBottomRight()).length();
+            offsetD = ofMap(offsetD, 0 , 250, 120, 60);
+            rectD.setSize(offsetD, offsetD);
+            
+            rectD.setX(rectD.x + (100 - offsetD));
+            rectD.setY(rectD.y + (100 - offsetD));
+            
+            
+            ofBeginShape();
+            ofVertex(bgRect.getBottomRight().x, bgRect.getBottomRight().y);
+            ofVertex(rectDO.getTopRight().x, rectDO.getTopRight().y);
+            ofVertex(rectD.getTopRight().x, rectD.getTopRight().y);
+            ofVertex(rectD.getBottomLeft().x, rectD.getBottomLeft().y);
+            ofVertex(rectDO.getBottomLeft().x, rectDO.getBottomLeft().y);
+            
+            ofEndShape();
+
+            
+            
+            ofDrawRectangle(rectD);
+            
+            
+            
+        }
         
-        img.draw(20, ofGetWidth()/2, 150, 100);
+        
+        
+        
+        
+        ofSetColor(255);
+        img.draw(20, ofGetWidth()/2 - 20, 90, 60);
     }
     
     

@@ -31,8 +31,6 @@ public:
     
     deque<float> nearest;
     
-    
-    
     deque<float> heights;
     deque<ofVec2f> coordinates;
     
