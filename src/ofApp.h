@@ -49,5 +49,7 @@ public:
     ofImage img;
     bool loading;
     bool loaded;
+    
+    ofCamera camera;
 
 };

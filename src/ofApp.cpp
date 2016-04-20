@@ -135,7 +135,14 @@ void ofApp::draw()
     ofDrawBitmapString("fps" + ofToString(ofGetFrameRate()), 20, 20);
     
     
-    
+//    ofPushMatrix();
+//    ofTranslate(ofGetWidth()/3, ofGetWidth()/3);
+//    ofDrawBox(-200, -200, 0, 200, 200, 200);
+//    ofDrawBox(200, -200, 0, 200, 200, 200);
+//    ofDrawBox(-200, 200, 0, 200, 200, 200);
+//    ofDrawBox(200, 200, 0, 200, 200, 200);
+//    ofTranslate(-ofGetWidth()/3, -ofGetWidth()/3);
+//    ofPopMatrix();
     
     float nearAverage = 0;
     for (int i = 0 ; i < nearest.size(); i ++){
@@ -154,6 +161,8 @@ void ofApp::draw()
     
     if(img.isAllocated()){
         ofSetColor(0, 0, 0);
+        
+        
         ofDrawBitmapString("average sky color at the moment", 20, ofGetHeight() - 120);
         ofDrawBitmapString("#" + ofToString(averageColor.getHex()) , 20, ofGetHeight() - 140);
         
@@ -165,6 +174,8 @@ void ofApp::draw()
         
         img.draw(20, ofGetWidth()/2, 150, 100);
     }
+    
+    
     
     
 
