@@ -36,18 +36,30 @@ public:
     
     float offset_x;
     float offset_y;
+    float lastAverage;
+    int selector;
     
     ofVec2f mousePosOrigin;
-    
-    
-
-    
+ 
     ofColor averageColor;
     
     ofImage img;
+    ofImage tree1;
+    ofImage tree2;
+
     bool loading;
     bool loaded;
+    bool averageChanged;
+    
+    
     
     ofCamera camera;
-
+    
+//    int ofGetHour(){
+//        time_t curr;
+//        tm  local;
+//        time(&curr);
+//        local =*(localtime(&curr));
+//        return local.tm_hour;
+//    }
 };

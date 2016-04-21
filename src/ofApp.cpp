@@ -4,6 +4,9 @@
 void ofApp::setup()
 {
     std::string file = "nycbuidling.json";
+    tree1.load("images/trees1.png");
+    tree2.load("images/trees2.png");
+    
 
     // Now parse the JSON - data source - Mapzen
     // Special thanks -> Weili
@@ -42,6 +45,7 @@ void ofApp::setup()
     loaded = false;
     ofRegisterURLNotification(this);
     averageColor = ofColor(0,0,0);
+    selector = 0;
 
 
 }
@@ -80,7 +84,7 @@ void ofApp::update(){
             }
         }
         averageColor.set(addUpR/sumOfPoints, addUpG/sumOfPoints, addUpB/sumOfPoints);
-        cout<<averageColor<<endl;
+      
     
     }
     
@@ -100,6 +104,7 @@ void ofApp::draw()
     
     ofBackground(255);
     ofSetColor(0, 0, 0);
+    ofDrawBitmapString("press space to refresh", 20, ofGetHeight() - 250);
 
     
     for (int i = 0; i < heights.size() ; i ++){
@@ -137,24 +142,19 @@ void ofApp::draw()
     ofDrawBitmapString("fps" + ofToString(ofGetFrameRate()), 20, 20);
     
     
-//    ofPushMatrix();
-//    ofTranslate(ofGetWidth()/3, ofGetWidth()/3);
-//    ofDrawBox(-200, -200, 0, 200, 200, 200);
-//    ofDrawBox(200, -200, 0, 200, 200, 200);
-//    ofDrawBox(-200, 200, 0, 200, 200, 200);
-//    ofDrawBox(200, 200, 0, 200, 200, 200);
-//    ofTranslate(-ofGetWidth()/3, -ofGetWidth()/3);
-//    ofPopMatrix();
-    
-    
-    
-    
     
     float nearAverage = 0;
+    
+    
+
+    
     for (int i = 0 ; i < nearest.size(); i ++){
-        ofDrawRectangle(10 + 25 * i, 80, 20, nearest[i]);
+        ofDrawRectangle(20 + 25 * i, ofGetHeight()/2 - nearest[i] * 0.5, 20, nearest[i] * 0.5);
         nearAverage = (nearAverage + nearest[i]) / nearest.size();
     }
+    
+    if (nearAverage != lastAverage) averageChanged = true;
+//        cout<<nearAverage<< lastAverage <<endl;
     
     ofDrawBitmapString("average height ", 20, 40);
     ofDrawBitmapString(ofToString(nearAverage), 20, 60);
@@ -169,8 +169,9 @@ void ofApp::draw()
         ofSetColor(0, 0, 0);
         
         // writing some stuff
+        
         ofDrawBitmapString("average sky color at the moment", 20, ofGetHeight() - 240);
-        ofDrawBitmapString("#" + ofToString(averageColor.getHex()) , 20, ofGetHeight() - 230);
+        ofDrawBitmapString("#" + ofToString(averageColor.getHex()) , 20, ofGetHeight() - 225);
         
         // getting relative coordinates
         ofVec2f popupOrigin = ofVec2f(20, ofGetHeight() - 220);
@@ -197,7 +198,15 @@ void ofApp::draw()
             offset = ofMap(offset, 0, 250, 120, 60);
             
             rectA.setSize(offset , offset);
-            ofSetColor(0, 0, 0);
+            
+            
+            // setting color base on time
+            if(ofGetHours() > 18 || ofGetHours() < 7){
+                ofSetColor(49, 37, 11);
+                cout<<" oh"<<endl;
+            }else{
+                ofSetColor(0, 0, 0);
+            }
             ofDrawRectangle(rectA);
            
            // ofDrawRectangle(rectAO);
@@ -280,17 +289,34 @@ void ofApp::draw()
             
             ofEndShape();
 
-            
-            
+        
             ofDrawRectangle(rectD);
             
+            ofSetColor(255);
+            // drawing trees if necessary
             
-            
+            if (nearAverage < 25){
+                
+                
+                if (averageChanged){
+                    selector = floor(ofRandom(1.9));
+                    averageChanged = false;
+                }
+                
+                if(ofGetHours() > 18 || ofGetHours() < 7){
+                    ofSetColor(0,0,0);
+                    cout<<" oh"<<endl;
+                }else{
+                    ofSetColor(255);
+                }
+                
+                if (selector == 0){
+                    tree1.draw(bgRect);
+                }else{
+                    tree2.draw(bgRect);
+                }
+            }
         }
-        
-        
-        
-        
         
         ofSetColor(255);
         img.draw(20, ofGetWidth()/2 - 20, 90, 60);
@@ -298,7 +324,7 @@ void ofApp::draw()
     
     
     
-    
+    lastAverage = nearAverage;
 
 
 }
