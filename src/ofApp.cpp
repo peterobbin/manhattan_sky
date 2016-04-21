@@ -84,11 +84,9 @@ void ofApp::update(){
             }
         }
         averageColor.set(addUpR/sumOfPoints, addUpG/sumOfPoints, addUpB/sumOfPoints);
-      
-    
+        cout<<averageColor<<endl;
+        
     }
-    
-    
     
     
     
