@@ -5,7 +5,8 @@ This project is about visualizing how the sky might looks like in different neig
 ___
 
 # Use
-This project is compatible with of_v20180924_osx_nightly or later.
+This project is compatible with of_v20180924_osx_nightly or later. Get the nightly build here: https://openframeworks.cc/ci_server/versions/nightly/of_v20180924_osx_nightly.zip
+
 Tested on MacOS Mojave.
 
 1. Make sure to get ofxJson from https://github.com/jeffcrouse/ofxJSON
