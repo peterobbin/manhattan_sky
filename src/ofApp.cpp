@@ -222,7 +222,7 @@ void ofApp::draw()
             //*** secondRect -----------------------------
             
             ofRectangle rectB = ofRectangle(ofVec2f(popupMaxCoor.x - 100, popupOrigin.y) + ofVec2f(-nearest[1] * 1.5, nearest[1]* 0.5) * 0.1, 100, 100);
-            ofRectangle rectBO = ofRectangle(bgRect.getTopRight() - ofVec2f(80, 0), 80, 80);
+            ofRectangle rectBO = ofRectangle(ofVec2f( bgRect.getTopRight().x, bgRect.getTopRight().y) - ofVec2f(80, 0), 80, 80);
             float offsetB = ofVec2f(bgRect.getTopRight() - rectB.getBottomLeft()).length();
             offsetB = ofMap(offsetB, 0, 250, 120, 60);
             rectB.setSize(offsetB, offsetB);
@@ -242,7 +242,7 @@ void ofApp::draw()
             
             //*** thirdRect -----------------------------
             ofRectangle rectC = ofRectangle(ofVec2f(popupOrigin.x, popupMaxCoor.y - 100) + ofVec2f(nearest[2] * 1.5, -nearest[2]* 0.5) * 0.1, 100, 100);
-            ofRectangle rectCO = ofRectangle(bgRect.getBottomLeft() - ofVec2f(0, 80), 80, 80);
+            ofRectangle rectCO = ofRectangle(ofVec2f( bgRect.getBottomLeft().x, bgRect.getBottomLeft().y) - ofVec2f(0, 80), 80, 80);
             
             
             float offsetC = ofVec2f(bgRect.getBottomLeft() - rectC.getTopRight()).length();
@@ -268,7 +268,7 @@ void ofApp::draw()
             
             //*** fourthRect -----------------------------
             ofRectangle rectD = ofRectangle(ofVec2f(popupMaxCoor.x - 100, popupMaxCoor.y - 100) - ofVec2f(nearest[3] * 1.5, nearest[3]* 0.5) * 0.1, 100, 100);
-            ofRectangle rectDO = ofRectangle(bgRect.getBottomRight() - ofVec2f(80, 80), 80, 80);
+            ofRectangle rectDO = ofRectangle(ofVec2f( bgRect.getBottomRight().x, bgRect.getBottomRight().y) - ofVec2f(80, 80), 80, 80);
 
             float offsetD = ofVec2f(rectD.getTopLeft() - bgRect.getBottomRight()).length();
             offsetD = ofMap(offsetD, 0 , 250, 120, 60);
