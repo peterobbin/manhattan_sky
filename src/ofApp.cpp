@@ -74,8 +74,9 @@ void ofApp::update(){
     if(img.isAllocated() && loaded){
         loaded = false;
         
-        for (int y = 0; y< img.getHeight()/2; y++) {
-            for (int x = 0; x < img.getWidth(); x++) {
+        // getting top but not very top, getting left but only half left
+        for (int y = img.getHeight() * 0.2f ; y< img.getHeight() * 0.3f; y++) {
+            for (int x = 0; x < img.getWidth() * 0.5f; x++) {
                 addUpR += img.getColor(x, y).r;
                 addUpG += img.getColor(x, y).g;
                 addUpB += img.getColor(x, y).b;
@@ -201,7 +202,7 @@ void ofApp::draw()
             // setting color base on time
             if(ofGetHours() > 18 || ofGetHours() < 7){
                 ofSetColor(49, 37, 11);
-                cout<<" oh"<<endl;
+                cout<<" oh using night color "<<endl;
             }else{
                 ofSetColor(0, 0, 0);
             }
@@ -349,8 +350,8 @@ void ofApp::keyPressed  (int key){
             break;
         case ' ':
             img.clear();
-            // photo credit from http://www.sheratontribecaview.com/
-            ofLoadURLAsync("http://cam.sheratontribecaview.com/sheraton-tribeca-new-york-hotel.jpg","tsingy_forest");
+            // photo credit from NYC DOT
+            ofLoadURLAsync("http://207.251.86.238/cctv90.jpg","tsingy_forest");
             loading =true;
             loaded = true;
             break;
