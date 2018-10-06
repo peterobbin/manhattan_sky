@@ -56,7 +56,7 @@ void ofApp::urlResponse(ofHttpResponse & response){
         img.load(response.data);
         loading=false;
     }else{
-        cout << response.status << " " << response.error << endl;
+        cout << response.status << " " << response.error << " for request " << response.request.name << endl;
         if(response.status!=-1) loading=false;
     }
 }
@@ -66,7 +66,7 @@ void ofApp::update(){
     float addUpR;
     float addUpG;
     float addUpB;
-    float sumOfPoints;
+    float sumOfPoints = 0.f;
     
     
     // calculating color when new image is loaded
@@ -75,23 +75,44 @@ void ofApp::update(){
         loaded = false;
         
         // getting top but not very top, getting left but only half left
-        for (int y = img.getHeight() * 0.2f ; y< img.getHeight() * 0.3f; y++) {
-            for (int x = 0; x < img.getWidth() * 0.5f; x++) {
-                addUpR += img.getColor(x, y).r;
-                addUpG += img.getColor(x, y).g;
-                addUpB += img.getColor(x, y).b;
+        for (int y = img.getHeight() * 0.15f ; y< img.getHeight() * 0.2f ; y++) {
+            for (int x = 0; x < img.getWidth() * 0.3f ; x++) {
+                ofFloatColor c(img.getColor(x, y));
+                addUpR += c.r * 255.f;
+                addUpG += c.g * 255.f;
+                addUpB += c.b * 255.f;
                 
-                sumOfPoints += 1;
+                sumOfPoints += 1.f;
             }
         }
+        
         averageColor.set(addUpR/sumOfPoints, addUpG/sumOfPoints, addUpB/sumOfPoints);
         cout<<averageColor<<endl;
         
     }
     
     
+  
     
-    
+//    ofSetColor(0, 0, 0);
+//    ofDrawBitmapString("hit spacebar to load image from web", 10, ofGetHeight()-20);
+//    if(loading)
+//        ofDrawBitmapString("loading...", 10, ofGetHeight()+20);
+//    float divider = ofMap( mouseX, 0, ofGetWidth(), 1, 48, true );
+//
+//    if(img.isAllocated()){
+//        for(int y = 0; y < img.getHeight(); y+= divider){
+//            for(int x = 0; x < img.getWidth(); x+=divider){
+//                ofColor c = img.getColor(x, y);
+//
+//                ofSetColor( c.r, c.g, c.b );
+//                ofDrawCircle( x, y, divider/2 );
+//            }
+//        }
+//
+//        ofSetColor(255);
+//        img.draw(img.getWidth(), 0);
+//    }
     
     
 
@@ -170,7 +191,7 @@ void ofApp::draw()
         // writing some stuff
         
         ofDrawBitmapString("average sky color at the moment", 20, ofGetHeight() - 240);
-        ofDrawBitmapString("#" + ofToString(averageColor.getHex()) , 20, ofGetHeight() - 225);
+        ofDrawBitmapString(" " + ofToString(averageColor) , 20, ofGetHeight() - 225);
         
         // getting relative coordinates
         ofVec2f popupOrigin = ofVec2f(20, ofGetHeight() - 220);
